@@ -1,7 +1,7 @@
 # Wirecard Checkout Page plugin for Demandware
 
-[![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://raw.githubusercontent.com/wirecard/Magento-WCP/master/LICENSE)
-[![Demandware 13.4](https://img.shields.io/badge/Demandware-v13.4-green.svg)](https://www.magento.com/)
+[![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://raw.githubusercontent.com/wirecard/demandware-wcp/master/LICENSE)
+[![Demandware 13.4](https://img.shields.io/badge/Demandware-v13.4-green.svg)](http://www.demandware.com/)
 
 Wirecard Checkout Page plugin for Demandware. 
 
