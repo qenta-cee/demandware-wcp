@@ -1,0 +1,65 @@
+/**
+ * Shop System Plugins - Terms of use 
+ * 
+ * This terms of use regulates warranty and liability between Wirecard Central Eastern Europe 
+ * (subsequently referred to as WDCEE) and it's contractual partners partners
+ * (subsequently referred to as customer or customers) which are related to the use of plugins 
+ * provided by WDCEE. The Plugin is provided provided by WDCEE free of charge for it's customers 
+ * and must be used for the purpose of WDCEE's payment platform platform integration only. 
+ * It explicitly is not part of the general contract between WDCEE and it's customer. The plugin 
+ * has successfully been tested under specific circumstances which are are defined as the shopsystem's 
+ * standard configuration (vendor's delivery state). The Customer is responsible for testing the plugin's 
+ * functionality before putting it into production enviroment. The customer uses the the plugin 
+ * at own risk. WDCEE does not guarantee it's full functionality neither does WDCEE assume liability 
+ * for any disadvantage related to the use use of this plugin. 
+ * By installing the plugin into the shopsystem the customer agrees to the terms of use. 
+ * Please do not use this plugin if you do not agree to the terms of use !
+ *
+ * Creates a payment instrument specific for the given payment type (payment method)
+ * for the given basket. If any error occurs the pipelet returns PIPELET_ERROR with
+ * no payment instrument being created. If the creation succeeded the script returns 
+ * the newly created payment instrument.
+ *
+ * If only one payment instrument is allowed, any existing payment instrument may be
+ * removed by using the RemoveExisting input parameter and passing a Boolean true.
+ *
+ * @input LineItemCtnr : dw.order.LineItemCtnr The basket.
+ * @input PaymentType : String the payment method of the payment instrument to create.
+ * @input RemoveExisting : Boolean if true, removes any other payment instruments of the same payment method
+ * @output PaymentInstrument : dw.order.PaymentInstrument The created payment instrument.
+ */
+importPackage( dw.system );
+importPackage( dw.order );
+importPackage( dw.util );
+importPackage( dw.value );
+importPackage( dw.web );
+
+importScript("wirecard/libUtils.ds");
+
+function execute( pdict : PipelineDictionary ) : Number
+{
+    var lineItemCtnr : LineItemCtnr = pdict.LineItemCtnr;
+	var paymentType : String = pdict.PaymentType;
+	var removeExisting : Boolean = pdict.RemoveExisting;
+
+	// validate pipelet input parameters
+	if( lineItemCtnr == null || paymentType == null || removeExisting == null)
+	{
+		return PIPELET_ERROR;
+	}
+
+	// remove existing payment instruments from the basket
+	if (removeExisting)
+	{
+		removeExistingPaymentInstruments( lineItemCtnr,  paymentType );
+	}
+
+	// calculate the amount to be reflected by this payment instrument
+	var amount = calculateNonGiftCertificateAmount( lineItemCtnr );
+
+	// create a payment instrument
+	var paymentInstr : PaymentInstrument = lineItemCtnr.createPaymentInstrument( paymentType, amount );
+
+	pdict.PaymentInstrument = paymentInstr;
+    return PIPELET_NEXT;
+}

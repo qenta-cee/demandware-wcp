@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<payment-settings xmlns="http://www.demandware.com/xml/impex/paymentsettings/2009-09-15">
+
+    <payment-method method-id="WIRECARD_CREDIT_CARD">
+        <name xml:lang="x-default">Credit Card</name>
+        <enabled-flag>true</enabled-flag>
+        <processor-id>WIRECARD_CREDIT</processor-id>
+        <custom-attributes>
+            <custom-attribute attribute-id="wirecardMaxRetries">0</custom-attribute>
+            <custom-attribute attribute-id="wirecardPaymentType">CCARD</custom-attribute>
+        </custom-attributes>
+    </payment-method>
+
+    <payment-method method-id="WIRECARD_PAYPAL">
+        <name xml:lang="x-default">Pay Pal</name>
+        <enabled-flag>true</enabled-flag>
+        <processor-id>WIRECARD_PAYPAL</processor-id>
+        <custom-attributes>
+            <custom-attribute attribute-id="wirecardPaymentType">PAYPAL</custom-attribute>
+            <custom-attribute attribute-id="wirecardSubmitShippingData">true</custom-attribute>
+            <custom-attribute attribute-id="wirecardUpdateShippingData">false</custom-attribute>
+        </custom-attributes>
+    </payment-method>
+
+    <payment-method method-id="WIRECARD_SOFORT_UEBERWEISUNG">
+        <name xml:lang="x-default">Sofortüberweisung</name>
+        <enabled-flag>true</enabled-flag>
+        <processor-id>WIRECARD_SOFORT</processor-id>
+        <custom-attributes>
+            <custom-attribute attribute-id="wirecardPaymentType">SOFORTUEBERWEISUNG</custom-attribute>
+        </custom-attributes>
+    </payment-method>
+
+    <payment-method method-id="WIRECARD_IDEAL">
+        <name xml:lang="x-default">iDEAL</name>
+        <enabled-flag>true</enabled-flag>
+        <processor-id>WIRECARD_IDEAL</processor-id>
+        <custom-attributes>
+            <custom-attribute attribute-id="wirecardPaymentType">IDL</custom-attribute>
+        </custom-attributes>
+    </payment-method>
+
+    <payment-method method-id="WIRECARD_EPS_ONLINE_TRANSFER">
+        <name xml:lang="x-default">EPS Onlineüberweisung</name>
+        <enabled-flag>true</enabled-flag>
+        <processor-id>WIRECARD_EPS</processor-id>
+        <custom-attributes>
+            <custom-attribute attribute-id="wirecardPaymentType">EPS</custom-attribute>
+        </custom-attributes>
+    </payment-method>
+
+    <payment-method method-id="WIRECARD_SELECT">
+        <name xml:lang="x-default">Select at Wirecard</name>
+        <enabled-flag>true</enabled-flag>
+        <processor-id>WIRECARD_SELECT</processor-id>
+        <custom-attributes>
+            <custom-attribute attribute-id="wirecardPaymentType">SELECT</custom-attribute>
+        </custom-attributes>
+    </payment-method>
+
+</payment-settings>

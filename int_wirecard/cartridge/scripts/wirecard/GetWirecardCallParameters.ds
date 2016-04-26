@@ -1,0 +1,220 @@
+/**
+ * Shop System Plugins - Terms of use 
+ * 
+ * This terms of use regulates warranty and liability between Wirecard Central Eastern Europe 
+ * (subsequently referred to as WDCEE) and it's contractual partners partners
+ * (subsequently referred to as customer or customers) which are related to the use of plugins 
+ * provided by WDCEE. The Plugin is provided provided by WDCEE free of charge for it's customers 
+ * and must be used for the purpose of WDCEE's payment platform platform integration only. 
+ * It explicitly is not part of the general contract between WDCEE and it's customer. The plugin 
+ * has successfully been tested under specific circumstances which are are defined as the shopsystem's 
+ * standard configuration (vendor's delivery state). The Customer is responsible for testing the plugin's 
+ * functionality before putting it into production enviroment. The customer uses the the plugin 
+ * at own risk. WDCEE does not guarantee it's full functionality neither does WDCEE assume liability 
+ * for any disadvantage related to the use use of this plugin. 
+ * By installing the plugin into the shopsystem the customer agrees to the terms of use. 
+ * Please do not use this plugin if you do not agree to the terms of use !
+ *
+ * 
+ * This script collects all necessary parameters to be submitted to Wirecard.
+ * 
+ * @input Order : dw.order.Order
+ * @input Customer : dw.customer.Customer
+ * @output WirecardUrl : String
+ * @output WirecardParameters : dw.util.HashMap
+ */
+importPackage( dw.system );
+importPackage( dw.order );
+importPackage( dw.customer );
+importPackage( dw.web );
+importPackage( dw.util );
+importPackage( dw.crypto );
+
+importScript("int_wirecard:wirecard/libLogger.ds");
+
+function execute( args : PipelineDictionary ) : Number
+{
+	// Read input parameters
+	var order : Order = args.Order;
+	var customer : Customer = args.Customer;
+
+	// Get all site preferences / parameters
+	var secret : String =  Site.current.getCustomPreferenceValue("wirecardSecretString");
+	var customerId : String = Site.getCurrent().getCustomPreferenceValue("wirecardCustomerId"); 
+	var shopID : String = !empty(Site.getCurrent().getCustomPreferenceValue("wirecardShopId")) ? Site.current.getCustomPreferenceValue("wirecardShopId") : "";
+
+	// Basic Payment Information
+	var orderNo : String = order.orderNo;
+	var timestamp : String = StringUtils.formatCalendar(Site.getCalendar(), "yyyyMMDDHHmmssSSS");
+	var amount : String	 = order.totalGrossPrice.value.toFixed(2);
+	var currency : String = Site.getCurrent().currencyCode;
+	var paymentInstruments = order.getPaymentInstruments();
+	var paymentMethod : PaymentMethod = getNonGCPaymentMethod(paymentInstruments);
+	var paymenttype : String = paymentMethod.custom.wirecardPaymentType.value;
+	
+	var language : String;
+	var locale : String = request.getLocale();
+	if (locale == "default") {
+		language = "en";
+	}
+	else {
+		var language : String = Locale.getLocale(locale).getLanguage();
+	}
+	
+	// All URLs
+	var successURL : String = URLUtils.https(Site.getCurrent().getCustomPreferenceValue("wirecardSuccessUrl"));	
+	var cancelURL : String = URLUtils.https(Site.getCurrent().getCustomPreferenceValue("wirecardCancelUrl")); 
+	var failureURL : String = URLUtils.https(Site.getCurrent().getCustomPreferenceValue("wirecardFailureUrl"));
+	var pendingURL : String = URLUtils.https(Site.getCurrent().getCustomPreferenceValue("wirecardPendingUrl")); 
+	var confirmURL : String = URLUtils.https(Site.getCurrent().getCustomPreferenceValue("wirecardConfirmUrl")); 
+	var serviceURL : String = URLUtils.https(Site.getCurrent().getCustomPreferenceValue("wirecardServiceUrl")); 
+	
+	// Display Texts
+	var displayText : String = Resource.msgf(Site.getCurrent().getCustomPreferenceValue("wirecardDisplayText"), 'wirecard', '', orderNo);
+	var customerStatement : String = Resource.msgf(Site.getCurrent().getCustomPreferenceValue("wirecardCustomerStatement"), 'wirecard', '', orderNo);
+	var orderDescription : String = Resource.msgf(Site.getCurrent().getCustomPreferenceValue("wirecardOrderDescription"), 'wirecard', '', orderNo);
+
+	// Other Control Parameters
+	var duplicateRequestCheck : String = Site.getCurrent().getCustomPreferenceValue("wirecardDuplicateRequestCheck") ? "yes" : "";
+	var trimResponseParameters : String = Site.getCurrent().getCustomPreferenceValue("wirecardTrimResponseParameters") ? "yes" : "";
+
+	var autoDeposit : String = paymentMethod.custom.wirecardAutoDeposit ? "yes" : "";	
+	var maxRetries : String = empty(paymentMethod.custom.wirecardMaxRetries) ? "" : paymentMethod.custom.wirecardMaxRetries.toFixed(0);
+
+	var orderNumber : String = (Site.getCurrent().getCustomPreferenceValue("wirecardOrderNumber") && maxRetries == "0") ? orderNo : "";
+	
+	// Shipping Address Information
+	var address : OrderAddress = order.defaultShipment.shippingAddress;
+	var shipFirstName : String = address.firstName;
+	var shipLastName : String = address.lastName;
+	var shipAddress1 : String = address.address1;
+	var shipAddress2 : String = address.address2;
+	var shipCity : String = address.city;
+	var shipPostCode : String = address.postalCode;
+	var shipCountry : String = address.countryCode.value;
+	var shipPhoneNo : String = address.phone;
+	
+	// Plugin Information
+	var shopName : String = Site.getCurrent().getCustomPreferenceValue("wirecardShopName");
+	var shopVersion : String = Site.getCurrent().getCustomPreferenceValue("wirecardShopVersion");
+	var pluginName : String = Site.getCurrent().getCustomPreferenceValue("wirecardPluginName");
+	var pluginVersion : String = Site.getCurrent().getCustomPreferenceValue("wirecardPluginVersion");
+	var pluginVersionBase64 : String = StringUtils.encodeBase64(shopName + ";" + shopVersion + ";" + pluginName + ";" + pluginVersion);
+
+	// Custom Parameters
+	var dwrOrderNo : String = orderNo; 
+	var dwrPaymentMethodId : String = paymentMethod.ID;
+
+	// Generate the fingerprint
+	var requestFingerprintOrder : String = "secret,shopId,orderReference,customerStatement,customerId,amount,currency,language,orderDescription,displayText,successURL,confirmURL,duplicateRequestCheck,trimResponseParameters,autoDeposit,maxRetries,timestamp,DWROrderNo,DWRPaymentMethodId";
+	var fingerprintSeed : String = secret+shopID+orderNo+customerStatement+customerId+amount+currency+language+orderDescription+displayText+successURL+confirmURL+duplicateRequestCheck+trimResponseParameters+autoDeposit+maxRetries+timestamp+dwrOrderNo+dwrPaymentMethodId;
+	
+	// Add optional parameters to fingerprint
+	if (!empty(orderNumber)) {
+		requestFingerprintOrder += ",orderNumber";
+		fingerprintSeed += orderNumber;
+	}
+	
+	WirecardLogger.logWarn("GetWirecardCallParameters.ds: Prepare Wirecard call parameters for Order " + order.orderNo + "; Payment Type: " + paymenttype);
+	
+	// Add shipping address parameters to fingerprint
+	if (paymentMethod.custom.wirecardSubmitShippingData) {
+		requestFingerprintOrder += ",consumerShippingFirstname,consumerShippingLastname,consumerShippingAddress1,consumerShippingCity,consumerShippingCountry,consumerShippingZipCode";
+		fingerprintSeed += shipFirstName+shipLastName+shipAddress1+shipCity+shipCountry+shipPostCode;
+		
+		if (!empty(shipAddress2)) {
+			requestFingerprintOrder += ",consumerShippingAddress2";
+			fingerprintSeed += shipAddress2;
+		}
+		
+		if (!empty(shipPhoneNo)) {
+			requestFingerprintOrder += ",consumerShippingPhone";
+			fingerprintSeed += shipPhoneNo;
+		}		
+	}
+	
+	// Complete fingerprint
+	requestFingerprintOrder += ",requestFingerprintOrder";
+	fingerprintSeed += requestFingerprintOrder;
+	
+	var requestFingerprint : String =  
+		Encoding.toHex(
+			new MessageDigest(MessageDigest.DIGEST_MD5).digest(
+				MessageDigest.DIGEST_MD5, 
+				new Bytes(
+					fingerprintSeed, "UTF-8" 
+				)
+			)
+		);
+
+	// Generate the map with all necessary Wirecard parameters
+	var params : HashMap = new HashMap();
+	params.put("customerId", customerId);
+	params.put("shopId", shopID);
+	params.put("amount", amount);
+	params.put("currency", currency);
+	params.put("language", language);
+	params.put("successURL", successURL);
+	params.put("cancelURL", cancelURL);
+	params.put("failureURL", failureURL);
+	params.put("pendingURL", pendingURL);
+	params.put("confirmURL", confirmURL);
+	params.put("serviceURL", serviceURL);
+	params.put("paymenttype", paymenttype);
+	params.put("timestamp", timestamp);
+	
+	params.put("requestFingerprintOrder", requestFingerprintOrder);
+	params.put("requestFingerprint", requestFingerprint);
+
+	params.put("orderReference", orderNo);
+	params.put("orderDescription", orderDescription);
+	params.put("displayText", displayText);
+	params.put("customerStatement", customerStatement);
+	
+	params.put("duplicateRequestCheck", duplicateRequestCheck);
+	params.put("trimResponseParameters", trimResponseParameters);
+	params.put("autoDeposit", autoDeposit);
+	params.put("maxRetries", maxRetries);
+	
+	if (!empty(orderNumber)) {
+		params.put("orderNumber", orderNumber);
+	}
+	
+	if (paymentMethod.custom.wirecardSubmitShippingData) {
+		params.put("consumerShippingFirstname", shipFirstName);
+		params.put("consumerShippingLastname", shipLastName);
+		params.put("consumerShippingAddress1", shipAddress1);
+		params.put("consumerShippingCity", shipCity);
+		params.put("consumerShippingCountry", shipCountry);
+		params.put("consumerShippingZipCode", shipPostCode);
+		
+		if (!empty(shipAddress2)) {
+			params.put("consumerShippingAddress2", shipAddress2);
+		}
+		if (!empty(shipPhoneNo)) {
+			params.put("consumerShippingPhone", shipPhoneNo);
+		}		
+	}
+	
+	params.put("DWROrderNo", dwrOrderNo);
+	params.put("DWRPaymentMethodId", dwrPaymentMethodId);
+	params.put("pluginVersion", pluginVersionBase64);
+
+	args.WirecardParameters = params;
+	args.WirecardUrl = Site.getCurrent().getCustomPreferenceValue("wirecardUrl");
+	
+    return PIPELET_NEXT;
+}
+
+/**
+ * Gets the non-giftcertificate payment method for the basket, which is used as the main
+ * payment method send to Wirecard.
+ */
+function getNonGCPaymentMethod(paymentInstruments : Collection) : PaymentMethod {
+	var paymentInstrument : OrderPaymentInstrument;
+	for each (paymentInstrument in paymentInstruments) {
+		if (paymentInstrument.paymentMethod != PaymentInstrument.METHOD_GIFT_CERTIFICATE) {
+			return PaymentMgr.getPaymentMethod(paymentInstrument.paymentMethod);
+		}
+	}
+}

@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xmlns="http://www.demandware.com/xml/impex/metadata/2006-10-31">
+
+    <type-extension type-id="Order">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="wirecardOrderNo">
+                <display-name xml:lang="x-default">Wirecard Order No</display-name>
+                <description xml:lang="x-default">The order number returned by Wirecard payment gateway.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="Wirecard">
+                <display-name xml:lang="x-default">Wirecard Integration</display-name>
+                <attribute attribute-id="wirecardOrderNo"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+
+    <type-extension type-id="PaymentMethod">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="wirecardAutoDeposit">
+                <display-name xml:lang="x-default">Wirecard Auto Deposit</display-name>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardMaxRetries">
+                <display-name xml:lang="x-default">Wirecard Maximum Retries</display-name>
+                <type>int</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardPaymentType">
+                <display-name xml:lang="x-default">Wirecard Payment Type</display-name>
+                <description xml:lang="x-default">Configuration value for the payment type string send to Wirecard.</description>
+                <type>enum-of-string</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <value-definitions>
+                    <value-definition>
+                        <display xml:lang="x-default">Credit Card</display>
+                        <value>CCARD</value>
+                    </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">iDeal</display>
+                        <value>IDL</value>
+                    </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">PayPal</display>
+                        <value>PAYPAL</value>
+                    </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">EPS Online Transfer</display>
+                        <value>EPS</value>
+                    </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">Select at Wirecard</display>
+                        <value>SELECT</value>
+                    </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">Sofortüberweisung</display>
+                        <value>SOFORTUEBERWEISUNG</value>
+                    </value-definition>
+                </value-definitions>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardSubmitShippingData">
+                <display-name xml:lang="x-default">Submit Shipping Data to Wirecard</display-name>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardUpdateShippingData">
+                <display-name xml:lang="x-default">Wirecard Update Shipping Data</display-name>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="Wirecard">
+                <display-name xml:lang="x-default">Wirecard Integration</display-name>
+                <attribute attribute-id="wirecardPaymentType"/>
+                <attribute attribute-id="wirecardAutoDeposit"/>
+                <attribute attribute-id="wirecardMaxRetries"/>
+                <attribute attribute-id="wirecardSubmitShippingData"/>
+                <attribute attribute-id="wirecardUpdateShippingData"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+
+    <type-extension type-id="PaymentTransaction">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="wirecardFinancialInstitution">
+                <display-name xml:lang="x-default">Wirecard Financial Institution</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardGatewayContractNumber">
+                <display-name xml:lang="x-default">Wirecard Gateway Contract Number</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardGatewayReferenceNumber">
+                <display-name xml:lang="x-default">Wirecard Gateway Reference Number</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardIdealConsumerAccountNumber">
+                <display-name xml:lang="x-default">Wirecard iDEAL Consumer Account Number</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardIdealConsumerCity">
+                <display-name xml:lang="x-default">Wirecard iDEAL Consumer City</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardIdealConsumerName">
+                <display-name xml:lang="x-default">Wirecard iDEAL Consumer Name</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardMaskedPan">
+                <display-name xml:lang="x-default">Wirecard Masket PAN (Credit Card)</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardPaymentState">
+                <display-name xml:lang="x-default">Wirecard Payment State</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardPaymentType">
+                <display-name xml:lang="x-default">Wirecard Payment Type</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardPaypalPayerEmail">
+                <display-name xml:lang="x-default">Wirecard Paypal Payer Email</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardPaypalPayerFirstName">
+                <display-name xml:lang="x-default">Wirecard Paypal Payer First Name</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardPaypalPayerId">
+                <display-name xml:lang="x-default">Wirecard Paypal Payer Id</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardPaypalPayerLastName">
+                <display-name xml:lang="x-default">Wirecard Paypal Payer Last Name</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardSecurityCriteria">
+                <display-name xml:lang="x-default">Wirecard Security Criteria (Sofortüberweisung)</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardSenderAccountNumber">
+                <display-name xml:lang="x-default">Wirecard Sender Account Number (Sofortüberweisung)</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardSenderAccountOwner">
+                <display-name xml:lang="x-default">Wirecard Sender Account Owner (Sofortüberweisung)</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardSenderBIC">
+                <display-name xml:lang="x-default">Wirecard Sender BIC (Sofortüberweisung)</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardSenderBankName">
+                <display-name xml:lang="x-default">Wirecard Sender Bank Name (Sofortüberweisung)</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardSenderBankNumber">
+                <display-name xml:lang="x-default">Wirecard Sender Bank Number (Sofortüberweisung)</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardSenderCountry">
+                <display-name xml:lang="x-default">Wirecard Sender Country (Sofortüberweisung)</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardSenderIBAN">
+                <display-name xml:lang="x-default">Wirecard Sender IBAN (Sofortüberweisung)</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="Wirecard">
+                <display-name xml:lang="x-default">Wirecard Integration</display-name>
+                <attribute attribute-id="wirecardFinancialInstitution"/>
+                <attribute attribute-id="wirecardGatewayReferenceNumber"/>
+                <attribute attribute-id="wirecardGatewayContractNumber"/>
+                <attribute attribute-id="wirecardPaymentType"/>
+                <attribute attribute-id="wirecardPaymentState"/>
+                <attribute attribute-id="wirecardMaskedPan"/>
+                <attribute attribute-id="wirecardIdealConsumerName"/>
+                <attribute attribute-id="wirecardIdealConsumerAccountNumber"/>
+                <attribute attribute-id="wirecardIdealConsumerCity"/>
+                <attribute attribute-id="wirecardSenderAccountNumber"/>
+                <attribute attribute-id="wirecardSenderAccountOwner"/>
+                <attribute attribute-id="wirecardSenderBankNumber"/>
+                <attribute attribute-id="wirecardSenderBankName"/>
+                <attribute attribute-id="wirecardSenderBIC"/>
+                <attribute attribute-id="wirecardSenderIBAN"/>
+                <attribute attribute-id="wirecardSenderCountry"/>
+                <attribute attribute-id="wirecardSecurityCriteria"/>
+                <attribute attribute-id="wirecardPaypalPayerId"/>
+                <attribute attribute-id="wirecardPaypalPayerEmail"/>
+                <attribute attribute-id="wirecardPaypalPayerLastName"/>
+                <attribute attribute-id="wirecardPaypalPayerFirstName"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+
+    <type-extension type-id="SitePreferences">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="wirecardCancelUrl">
+                <display-name xml:lang="x-default">Cancel URL</display-name>
+                <description xml:lang="x-default">Indicates the pipeline which is called as Wirecard Cancel URL.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>COWirecard-Cancel</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardConfirmUrl">
+                <display-name xml:lang="x-default">Confirm URL</display-name>
+                <description xml:lang="x-default">Indicates the pipeline which is called as Wirecard Confirm URL.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>COWirecard-Confirm</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardCustomerId">
+                <display-name xml:lang="x-default">Customer Id</display-name>
+                <description xml:lang="x-default">Configuration value of the Wirecard Customer Id.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>D200001</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardCustomerStatement">
+                <display-name xml:lang="x-default">Customer Statement</display-name>
+                <description xml:lang="x-default">Resource Bundle Key for the Customer Statement Message.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>checkout.wirecard.customerstatement</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardDisplayText">
+                <display-name xml:lang="x-default">Display Text</display-name>
+                <description xml:lang="x-default">Resource Bundle Key for the display text displayed on the Wirecard templates.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>checkout.wirecard.displaytext</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardDuplicateRequestCheck">
+                <display-name xml:lang="x-default">Duplicate Request Check</display-name>
+                <description xml:lang="x-default">Defines if the Duplicate Request Check should be performed or not.</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>true</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardFailureUrl">
+                <display-name xml:lang="x-default">Failure URL</display-name>
+                <description xml:lang="x-default">Indicates the pipeline which is called as Wirecard Failure URL.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>COWirecard-Failure</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardMobileShopId">
+                <display-name xml:lang="x-default">Mobile Shop Id</display-name>
+                <description xml:lang="x-default">Configuration value for the Wirecard Mobile Shop Id, in order to indicate which premium templates should be loaded for a mobile frontend.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardOrderDescription">
+                <display-name xml:lang="x-default">Order Description</display-name>
+                <description xml:lang="x-default">Resource Bundle Key for the Order Description text displayed in Wirecard CEE Payment Center.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>checkout.wirecard.orderdescription</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardOrderNumber">
+                <display-name xml:lang="x-default">Submit Order Number</display-name>
+                <description xml:lang="x-default">Defines if the order number will be submitted to Wirecard or not.</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>true</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardPendingUrl">
+                <display-name xml:lang="x-default">Pending URL</display-name>
+                <description xml:lang="x-default">Indicates the pipeline which is called as Wirecard Pending URL.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>COWirecard-Pending</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardPluginName">
+                <display-name xml:lang="x-default">Plugin Name</display-name>
+                <description xml:lang="x-default">Internal Wirecard Plugin Name.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>demandware_WirecardCheckoutPage</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardPluginVersion">
+                <display-name xml:lang="x-default">Plugin Version</display-name>
+                <description xml:lang="x-default">Internal Wirecard Plugin Version.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>1.0.0</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardRedirectConfig">
+                <display-name xml:lang="x-default">Redirect Config</display-name>
+                <description xml:lang="x-default">Controls if the Wirecard premium templates should be loaded in an iFrame or within the browser window.</description>
+                <type>enum-of-string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <value-definitions>
+                    <value-definition default="true">
+                        <display xml:lang="x-default">Show in Browser Window</display>
+                        <value>BROWSER</value>
+                    </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">Show in iFrame</display>
+                        <value>IFRAME</value>
+                    </value-definition>
+                </value-definitions>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardSecretString">
+                <display-name xml:lang="x-default">Secret String</display-name>
+                <description xml:lang="x-default">Configuration value for the Wirecard Secret String / Pre Shared Key</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>B8AKTPWBRMNBV455FG6M2DANE99WU2</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardServiceUrl">
+                <display-name xml:lang="x-default">Service URL</display-name>
+                <description xml:lang="x-default">Indicates the pipeline which is called as Wirecard Service URL.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>COWirecard-Service</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardShopId">
+                <display-name xml:lang="x-default">Shop Id</display-name>
+                <description xml:lang="x-default">Configuration value for the Wirecard Shop Id, in order to indicate which premium templates should be loaded on their servers.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardShopName">
+                <display-name xml:lang="x-default">Shop Name</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>Demandware</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardShopVersion">
+                <display-name xml:lang="x-default">Shop Version</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>13.x</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardSuccessUrl">
+                <display-name xml:lang="x-default">Success URL</display-name>
+                <description xml:lang="x-default">Indicates the pipeline which is called as Wirecard Success URL.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>COWirecard-Success</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="wirecardTrimResponseParameters">
+                <display-name xml:lang="x-default">Trim Response Parameters</display-name>
+                <description xml:lang="x-default">Defines if the response parameters are trimmed by Wirecard for the fingerprint calculation.</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>true</default-value>
+            </attribute-definition>            
+            <attribute-definition attribute-id="wirecardUrl">
+                <display-name xml:lang="x-default">Wirecard URL</display-name>
+                <description xml:lang="x-default">URL for the Wirecard Server.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>https://checkout.wirecard.com/page/init.php</default-value>
+            </attribute-definition>
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="Wirecard">
+                <display-name xml:lang="x-default">Wirecard Integration</display-name>
+                <attribute attribute-id="wirecardUrl"/>
+                <attribute attribute-id="wirecardCustomerId"/>
+                <attribute attribute-id="wirecardSecretString"/>
+                <attribute attribute-id="wirecardShopId"/>
+                <attribute attribute-id="wirecardMobileShopId"/>
+                <attribute attribute-id="wirecardSuccessUrl"/>
+                <attribute attribute-id="wirecardCancelUrl"/>
+                <attribute attribute-id="wirecardFailureUrl"/>
+                <attribute attribute-id="wirecardConfirmUrl"/>
+                <attribute attribute-id="wirecardPendingUrl"/>
+                <attribute attribute-id="wirecardServiceUrl"/>
+                <attribute attribute-id="wirecardDisplayText"/>
+                <attribute attribute-id="wirecardCustomerStatement"/>
+                <attribute attribute-id="wirecardOrderDescription"/>
+                <attribute attribute-id="wirecardRedirectConfig"/>
+                <attribute attribute-id="wirecardOrderNumber"/>
+                <attribute attribute-id="wirecardDuplicateRequestCheck"/>
+                <attribute attribute-id="wirecardTrimResponseParameters"/>
+                <attribute attribute-id="wirecardShopName"/>
+                <attribute attribute-id="wirecardShopVersion"/>
+                <attribute attribute-id="wirecardPluginName"/>
+                <attribute attribute-id="wirecardPluginVersion"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+
+</metadata>

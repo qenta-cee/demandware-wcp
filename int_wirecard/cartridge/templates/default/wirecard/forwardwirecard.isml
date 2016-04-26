@@ -1,0 +1,24 @@
+<iscontent type="text/html" charset="UTF-8" compact="true"/>
+<html>
+<head>
+	<meta http-equiv=Content-Type content="text/html; charset=UTF-8" />
+</head>
+<body>
+<isinclude template="util/modules"/>
+
+	<form  action="${pdict.WirecardUrl}" method="post" name="frmWirecard" accept-charset="UTF-8">
+		${Resource.msg('checkout.wirecard.forward.text','wirecard',null)}
+
+		<!--- renders wirecard parameter --->
+		<isloop iterator="${pdict.WirecardParameters.keySet()}" alias="Parameter">
+			<input type="hidden" name="${Parameter}" value="<isprint value="${!empty(pdict.WirecardParameters[Parameter]) ? pdict.WirecardParameters[Parameter] : ""}" encoding="off">">
+		</isloop>
+		<p class="formbottom">
+			<button type="submit" name="send" value="${Resource.msg('checkout.wirecard.forward.send','wirecard',null)}"><span>${Resource.msg('checkout.wirecard.forward.send','wirecard',null)}</span></button>
+		</p>
+	</form>		
+<script type="text/javascript">
+	document.frmWirecard.submit();
+</script>
+</body>
+</html>
