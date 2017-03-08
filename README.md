@@ -1,9 +1,9 @@
-# Wirecard Checkout Page plugin for Demandware
+# Wirecard Checkout Page plugin for Demandware (Salesforce CC)
 
 [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://raw.githubusercontent.com/wirecard/demandware-wcp/master/LICENSE)
-[![Demandware 13.4](https://img.shields.io/badge/Demandware-v13.4-green.svg)](http://www.demandware.com/)
+[![Demandware (Salesforce CC) 17.2](https://img.shields.io/badge/Demandware-v17.2-green.svg)](http://www.demandware.com/)
 
-Wirecard Checkout Page plugin for Demandware. 
+Wirecard Checkout Page plugin for Demandware (Salesforce CC).
 
 Our [Online Guides](https://guides.wirecard.at/) provide further information on payment methods and additional features. Please observe our [terms of use](https://guides.wirecard.at/shop_plugins:info#terms_of_use) regarding plugins.
 
@@ -26,4 +26,3 @@ Wirecard Checkout Page offers:
 - Web interface for managing payments (approvals, cancelations, credits, etc.).
 - Benefit from Wirecard Bank´s license to conclude credit card acceptance contracts (acquiring) and issue credit cards.
 - With Wirecard Collecting only a single contract is required for payouts within various payment methods.
-- Support of recurring payments (subscriptions, one-click checkout).

@@ -1,0 +1,83 @@
+/**
+ * Shop System Plugins - Terms of use 
+ * 
+ * This terms of use regulates warranty and liability between Wirecard Central Eastern Europe 
+ * (subsequently referred to as WDCEE) and it's contractual partners partners
+ * (subsequently referred to as customer or customers) which are related to the use of plugins 
+ * provided by WDCEE. The Plugin is provided provided by WDCEE free of charge for it's customers 
+ * and must be used for the purpose of WDCEE's payment platform platform integration only. 
+ * It explicitly is not part of the general contract between WDCEE and it's customer. The plugin 
+ * has successfully been tested under specific circumstances which are are defined as the shopsystem's 
+ * standard configuration (vendor's delivery state). The Customer is responsible for testing the plugin's 
+ * functionality before putting it into production enviroment. The customer uses the the plugin 
+ * at own risk. WDCEE does not guarantee it's full functionality neither does WDCEE assume liability 
+ * for any disadvantage related to the use use of this plugin. 
+ * By installing the plugin into the shopsystem the customer agrees to the terms of use. 
+ * Please do not use this plugin if you do not agree to the terms of use !
+ *
+ * This script validates the parameters and fingerprint returned by Wirecard in order to prevent
+ * fraud.
+ *
+ * @input Fingerprint : String - the Wirecard fingerprint
+ * @input FingerprintOrder : String - the Wirecard fingerprint parameters
+ * @input Parameters : dw.web.HttpParameterMap - the current http parameter map
+ * @input Order : dw.order.Order - the current order
+ * @input WirecardAmount : String - the amount which was authorized at wirecard
+ */
+importPackage( dw.system );
+importPackage( dw.crypto );
+importPackage( dw.order );
+importPackage( dw.util );
+importPackage( dw.web );
+
+importScript("int_wirecard_pipelines:wirecard/libLogger.ds");
+
+function execute( args : PipelineDictionary ) : Number
+{
+	var fingerprintSeed : String = "";
+	var fingerprintOrder : String = args.FingerprintOrder;
+	var fingerprint : String = args.Fingerprint;
+	var order : Order = args.Order;
+	var wirecardAmount : String = args.WirecardAmount;
+	var parameters : HttpParameterMap = args.Parameters;
+	var secret : String = Site.getCurrent().getCustomPreferenceValue("wirecardSecretString");
+	
+	WirecardLogger.logDebug("ValidateWirecardAmountAndFingerprint.ds: Validate payment amount against order amount.");
+	
+	// Check the authorized amount, but not for the pending payment state
+	var paymentState : String = parameters.get("paymentState").submitted ? parameters.get("paymentState").value : "";
+	if (paymentState != "PENDING" && new Number(wirecardAmount).toFixed(2) != order.totalGrossPrice.value.toFixed(2)) {
+	    WirecardLogger.logFatal("ValidateWirecardAmountAndFingerprint.ds: Fatal error or fraud - different order amount was authorized at Wirecard; "
+	    	+ "Wirecard Amount: " + new Number(wirecardAmount).toFixed(2) + "; Order Amount: " + order.totalGrossPrice.value.toFixed(2)
+	    	+ "; Order " + order.orderNo);
+	    return PIPELET_ERROR;
+	}
+
+	// Check the fingerprint
+	var fpArray : Array = fingerprintOrder.split(",");
+
+	for each (var fpItem : String in fpArray) {
+		if (fpItem == "senderBankName") {
+			// for certain parameters, where a whitespace might be added in front or after the parameter, the raw value should be used
+			fingerprintSeed += args.Parameters.get(fpItem).rawValue;
+		}
+		else {
+			fingerprintSeed += fpItem == "secret" ? secret : args.Parameters.get(fpItem);
+		}
+	}
+	
+	WirecardLogger.logWarn("ValidateWirecardAmountAndFingerprint.ds: Validate the wirecard fingerprint for the following parameters: \n" + fingerprintOrder + 
+		"; Fingerprint seed calculated in Shop: " + fingerprintSeed);
+
+	var mac : Mac = Mac(Mac.HMAC_SHA_512);
+	var validationFingerprint = Encoding.toHex(mac.digest(fingerprintSeed, secret));
+
+	if (validationFingerprint.equals(fingerprint)) {
+	    WirecardLogger.logDebug("ValidateWirecardAmountAndFingerprint.ds: Fingerprint validation was successful.");
+	    return PIPELET_NEXT;
+	} else {
+	    WirecardLogger.logFatal("ValidateWirecardAmountAndFingerprint.ds: Fatal error or fraud - fingerprint validation failed and the order won't be completed. " +
+	        "Calculated Fingerprint: " + validationFingerprint + "; Wirecard Fingerprint: " + fingerprint + "; Order " + order.orderNo);
+	    return PIPELET_ERROR;
+	}
+}

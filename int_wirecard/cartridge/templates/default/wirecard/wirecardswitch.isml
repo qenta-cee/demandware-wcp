@@ -16,14 +16,36 @@ the terms of use. Please do not use this plugin if you do not agree to the terms
 </iscomment>
 
 <isdecorate template="checkout/pt_checkout"/>
-<isinclude template="util/modules"/>
 
-<isreportcheckout checkoutstep="${6}" checkoutname="${'ForwardWirecard'}"/>
+<iscomment>Copy the response iframe styles to the stylesheet</iscomment>
+<style>
+	iframe {
+		max-width: 100%;
+	}
+	.embed-container {
+	  position: relative; 
+	  padding-bottom: 100%;
+	  height: 0; 
+	  overflow: hidden; 
+	  width: 100%;
+	  height: auto;
+	}
+	.embed-container iframe {
+	  position: absolute; 
+	  top: 0; 
+	  left: 0; 
+	  width: 100%; 
+	  height: 100%; 
+	}	
+</style>
+
 <div>
 	<isif condition="${dw.system.Site.getCurrent().getCustomPreferenceValue('wirecardRedirectConfig').value == 'BROWSER'}">
 		<isinclude template="wirecard/wirecardforward" />
 	<iselse>
-		<iframe src="${URLUtils.https('COWirecard-ShowInIFrame', 'DWROrderNo', pdict.Order.orderNo)}" name="dwr_wirecard" frameborder="0" width="800" height="800" />
+		<div class="embed-container">
+			<iframe src="${URLUtils.https('COWirecard-ShowInIFrame', 'DWROrderNo', pdict.Order.orderNo, 'DWREmail', pdict.Order.customerEmail, 'DWRPostalCode', pdict.Order.billingAddress.postalCode, 'OriginalBasketUUID', request.custom.OriginalBasketUUID ? request.custom.OriginalBasketUUID : '', 'format', 'iframe')}" name="dwr_wirecard" frameborder="0" />
+		</div>
 	</isif>
 </div>
 

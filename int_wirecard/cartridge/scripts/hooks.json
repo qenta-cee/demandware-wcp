@@ -1,0 +1,28 @@
+{
+	"hooks": [
+		{
+			"name": "app.payment.processor.WIRECARD_CREDIT",
+			"script": "./wirecard/processor/WIRECARD_CREDIT"
+		},
+		{
+			"name": "app.payment.processor.WIRECARD_EPS",
+			"script": "./wirecard/processor/WIRECARD_EPS"
+		},
+		{
+			"name": "app.payment.processor.WIRECARD_IDEAL",
+			"script": "./wirecard/processor/WIRECARD_IDEAL"
+		},
+		{
+			"name": "app.payment.processor.WIRECARD_PAYPAL",
+			"script": "./wirecard/processor/WIRECARD_PAYPAL"
+		},
+		{
+			"name": "app.payment.processor.WIRECARD_SELECT",
+			"script": "./wirecard/processor/WIRECARD_SELECT"
+		},
+		{
+			"name": "app.payment.processor.WIRECARD_SOFORT",
+			"script": "./wirecard/processor/WIRECARD_SOFORT"
+		}
+	]
+}
