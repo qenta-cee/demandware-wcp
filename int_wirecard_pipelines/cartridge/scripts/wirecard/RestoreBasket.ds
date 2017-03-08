@@ -1,0 +1,95 @@
+/**
+ * Shop System Plugins - Terms of use 
+ * 
+ * This terms of use regulates warranty and liability between Wirecard Central Eastern Europe 
+ * (subsequently referred to as WDCEE) and it's contractual partners partners
+ * (subsequently referred to as customer or customers) which are related to the use of plugins 
+ * provided by WDCEE. The Plugin is provided provided by WDCEE free of charge for it's customers 
+ * and must be used for the purpose of WDCEE's payment platform platform integration only. 
+ * It explicitly is not part of the general contract between WDCEE and it's customer. The plugin 
+ * has successfully been tested under specific circumstances which are are defined as the shopsystem's 
+ * standard configuration (vendor's delivery state). The Customer is responsible for testing the plugin's 
+ * functionality before putting it into production enviroment. The customer uses the the plugin 
+ * at own risk. WDCEE does not guarantee it's full functionality neither does WDCEE assume liability 
+ * for any disadvantage related to the use use of this plugin. 
+ * By installing the plugin into the shopsystem the customer agrees to the terms of use. 
+ * Please do not use this plugin if you do not agree to the terms of use !
+ *
+ * Restores all information of the basket which was stored in a failed order. This is done only
+ * if the session was invalidated or there is a timeout, and the customer pressed the cancel url
+ * or ends up in a failure. Gift certificates and the creation of the billing address are handled
+ * outside the script, because there is no API for this.
+ * 
+ * Custom attributes needs to be added for each object in this script.
+ *
+ * @input Basket : dw.order.Basket - the old or a newly created basket
+ * @input Order : dw.order.Order - the previously created, but failed order
+ */
+importPackage( dw.system );
+importPackage( dw.order );
+importPackage( dw.util );
+
+importScript("int_wirecard_pipelines:wirecard/libLogger.ds");
+
+function execute( args : PipelineDictionary ) : Number
+{
+	var basket : Basket = args.Basket;
+	var order : Order = args.Order;
+	
+	// if the basket is empty, it needs to be restored
+	if (basket.productLineItems.size() == 0 && basket.giftCertificateLineItems.size() == 0) {
+		
+		var it : Iterator = order.productLineItems.iterator();
+		while (it.hasNext()) {
+			var pli : ProductLineItem = it.next();
+			var newPLI : ProductLineItem = basket.createProductLineItem(pli.productID, basket.defaultShipment);
+			newPLI.setQuantityValue(pli.quantity.value);
+			
+			// add pli custom attributes which needs to be copied
+			
+		}
+		
+		// Handle email address
+		basket.customerEmail = order.customerEmail;
+		
+		// Handle billing address
+		var billingAddress : OrderAddress = basket.getBillingAddress();
+		billingAddress.firstName = order.billingAddress.firstName;
+		billingAddress.lastName = order.billingAddress.lastName;
+		billingAddress.address1 = order.billingAddress.address1;
+		billingAddress.address2 = order.billingAddress.address2;
+		billingAddress.city = order.billingAddress.city;
+		billingAddress.postalCode = order.billingAddress.postalCode;
+		billingAddress.stateCode = order.billingAddress.stateCode;
+		billingAddress.countryCode = order.billingAddress.countryCode;
+		billingAddress.phone = order.billingAddress.phone;
+		// add billing address custom attributes which needs to be copied
+		
+		// Handle shipping address
+		var shippingAddress : OrderAddress = basket.defaultShipment.createShippingAddress();
+		shippingAddress.firstName = order.defaultShipment.shippingAddress.firstName;
+		shippingAddress.lastName = order.defaultShipment.shippingAddress.lastName;
+		shippingAddress.address1 = order.defaultShipment.shippingAddress.address1;
+		shippingAddress.address2 = order.defaultShipment.shippingAddress.address2;
+		shippingAddress.city = order.defaultShipment.shippingAddress.city;
+		shippingAddress.postalCode = order.defaultShipment.shippingAddress.postalCode;
+		shippingAddress.stateCode = order.defaultShipment.shippingAddress.stateCode;
+		shippingAddress.countryCode = order.defaultShipment.shippingAddress.countryCode;
+		shippingAddress.phone = order.defaultShipment.shippingAddress.phone;				
+		// add shipping address custom attributes which needs to be copied
+		
+		// Handle shipping method
+		basket.defaultShipment.setShippingMethod(order.defaultShipment.getShippingMethod());
+		
+		// add shipment custom attributes
+		// basket.defaultShipment.custom.xxx = order.defaultShipment.custom.xxx
+		
+		// add order custom attributes which needs to be copied
+		// basket.custom.xxx = order.custom.xxx
+		
+		WirecardLogger.logWarn("RestoreBasket.ds: Basket has been restored for failed Order " + order.orderNo);
+		
+	}
+	
+    return PIPELET_NEXT;
+}

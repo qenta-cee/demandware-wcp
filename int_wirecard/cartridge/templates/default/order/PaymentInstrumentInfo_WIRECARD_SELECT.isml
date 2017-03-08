@@ -14,6 +14,7 @@ related to the use use of this plugin. By installing the plugin into the shopsys
 the terms of use. Please do not use this plugin if you do not agree to the terms of use !
 </iscomment>
 <br/>
+Wirecard Order Number: <isprint value="${PaymentInstrumentInfo.paymentTransaction.transactionID}" /><br>
 <isif condition="${PaymentInstrumentInfo.paymentTransaction.custom.wirecardPaymentType == 'CCARD'}">
 Card Holder: <isprint value="${PaymentInstrumentInfo.creditCardHolder}" /><br>
 Card Type: <isprint value="${PaymentInstrumentInfo.creditCardType}" /><br>

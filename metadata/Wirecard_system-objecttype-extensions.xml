@@ -69,6 +69,12 @@
                     </value-definition>
                 </value-definitions>
             </attribute-definition>
+            <attribute-definition attribute-id="wirecardSubmitBillingData">
+                <display-name xml:lang="x-default">Submit Billing Data to Wirecard</display-name>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>            
             <attribute-definition attribute-id="wirecardSubmitShippingData">
                 <display-name xml:lang="x-default">Submit Shipping Data to Wirecard</display-name>
                 <type>boolean</type>
@@ -88,6 +94,7 @@
                 <attribute attribute-id="wirecardPaymentType"/>
                 <attribute attribute-id="wirecardAutoDeposit"/>
                 <attribute attribute-id="wirecardMaxRetries"/>
+                <attribute attribute-id="wirecardSubmitBillingData"/>
                 <attribute attribute-id="wirecardSubmitShippingData"/>
                 <attribute attribute-id="wirecardUpdateShippingData"/>
             </attribute-group>
@@ -139,7 +146,7 @@
                 <min-length>0</min-length>
             </attribute-definition>
             <attribute-definition attribute-id="wirecardMaskedPan">
-                <display-name xml:lang="x-default">Wirecard Masket PAN (Credit Card)</display-name>
+                <display-name xml:lang="x-default">Wirecard Masked PAN (Credit Card)</display-name>
                 <type>string</type>
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
@@ -343,14 +350,6 @@
                 <field-length>0</field-length>
                 <default-value>COWirecard-Failure</default-value>
             </attribute-definition>
-            <attribute-definition attribute-id="wirecardMobileShopId">
-                <display-name xml:lang="x-default">Mobile Shop Id</display-name>
-                <description xml:lang="x-default">Configuration value for the Wirecard Mobile Shop Id, in order to indicate which premium templates should be loaded for a mobile frontend.</description>
-                <type>string</type>
-                <mandatory-flag>false</mandatory-flag>
-                <externally-managed-flag>false</externally-managed-flag>
-                <min-length>0</min-length>
-            </attribute-definition>
             <attribute-definition attribute-id="wirecardOrderDescription">
                 <display-name xml:lang="x-default">Order Description</display-name>
                 <description xml:lang="x-default">Resource Bundle Key for the Order Description text displayed in Wirecard CEE Payment Center.</description>
@@ -397,7 +396,7 @@
                 <externally-managed-flag>false</externally-managed-flag>
                 <min-length>0</min-length>
                 <field-length>0</field-length>
-                <default-value>1.0.0</default-value>
+                <default-value>1.1.0</default-value>
             </attribute-definition>
             <attribute-definition attribute-id="wirecardRedirectConfig">
                 <display-name xml:lang="x-default">Redirect Config</display-name>
@@ -451,7 +450,7 @@
                 <externally-managed-flag>false</externally-managed-flag>
                 <min-length>0</min-length>
                 <field-length>0</field-length>
-                <default-value>Demandware</default-value>
+                <default-value>Salesforce Commerce Cloud</default-value>
             </attribute-definition>
             <attribute-definition attribute-id="wirecardShopVersion">
                 <display-name xml:lang="x-default">Shop Version</display-name>
@@ -460,7 +459,7 @@
                 <externally-managed-flag>false</externally-managed-flag>
                 <min-length>0</min-length>
                 <field-length>0</field-length>
-                <default-value>13.x</default-value>
+                <default-value>17.2.0</default-value>
             </attribute-definition>
             <attribute-definition attribute-id="wirecardSuccessUrl">
                 <display-name xml:lang="x-default">Success URL</display-name>
@@ -498,7 +497,6 @@
                 <attribute attribute-id="wirecardCustomerId"/>
                 <attribute attribute-id="wirecardSecretString"/>
                 <attribute attribute-id="wirecardShopId"/>
-                <attribute attribute-id="wirecardMobileShopId"/>
                 <attribute attribute-id="wirecardSuccessUrl"/>
                 <attribute attribute-id="wirecardCancelUrl"/>
                 <attribute attribute-id="wirecardFailureUrl"/>

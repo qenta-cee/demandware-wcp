@@ -1,0 +1,11 @@
+<iscontent type="text/html" charset="UTF-8" compact="true"/>
+<isif condition="${pdict.Status}">
+	<isif condition="${pdict.Status.isError()}">
+		<QPAY-CONFIRMATION-RESPONSE result="NOK" message="${pdict.Status.getMessage()}" />
+	<iselse>
+		<QPAY-CONFIRMATION-RESPONSE result="OK" />
+		<isif condition="${pdict.ReportOrder}">
+			<isinclude template="util/reporting/ReportOrder">
+		</isif>
+	</isif>
+</isif>

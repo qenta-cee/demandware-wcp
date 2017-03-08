@@ -53,8 +53,7 @@ the terms of use. Please do not use this plugin if you do not agree to the terms
 					
 					<div class="form-row">
 						<isset name="radioID" value="${paymentMethodType.value}" scope="page"/>
-						
-						<isif condition="${paymentMethodType.checked || (!empty(pdict.selectedPaymentID) && paymentMethodType.htmlValue == pdict.selectedPaymentID)}">
+						<isif condition="${paymentMethodType.checked || (paymentMethodType.value == pdict.CurrentForms.billing.paymentMethods.selectedPaymentMethodID.htmlValue)}">
 							<input type="radio" checked="checked" class="input-radio" name="${pdict.CurrentForms.billing.paymentMethods.selectedPaymentMethodID.htmlName}" value="${paymentMethodType.htmlValue}" id="is-${radioID}" />
 						<iselse>
 							<input type="radio" class="input-radio" name="${pdict.CurrentForms.billing.paymentMethods.selectedPaymentMethodID.htmlName}" value="${paymentMethodType.htmlValue}" id="is-${radioID}" />
