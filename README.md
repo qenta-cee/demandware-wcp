@@ -3,6 +3,14 @@
 [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://raw.githubusercontent.com/wirecard/demandware-wcp/master/LICENSE)
 [![Demandware (Salesforce CC) 17.2](https://img.shields.io/badge/Demandware-v17.2-green.svg)](http://www.demandware.com/)
 
+----
+**IMPORTANT INFORMATION**  
+You are visiting a shop extension which will become obsolete in the near future. It will be replaced by a new one, which has new features and enhanced functionality very soon.  
+Please then use our new shop extension available on salesforce.wirecard.com, which will be released soon and then maintained, updated and supported on a regular basis.  
+If you have any questions, please contact shop-systems-support@wirecard.com
+
+----
+
 Wirecard Checkout Page plugin for Demandware (Salesforce Commerce Cloud).
 
 Our [Online Guides](https://guides.wirecard.at/) provide further information on payment methods and additional features. Please observe our [terms of use](https://guides.wirecard.at/shop_plugins:info#terms_of_use) regarding plugins.
